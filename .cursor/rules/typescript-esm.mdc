@@ -1,0 +1,26 @@
+---
+globs: *.ts
+---
+# TypeScript + ESM (NodeNext)
+
+Key configuration:
+- `module: NodeNext`, `moduleResolution: NodeNext` in [tsconfig.json](mdc:tsconfig.json)
+- `type: module` in [package.json](mdc:package.json)
+- JSON import enabled with `resolveJsonModule: true` (use `with { type: 'json' }`).
+
+Imports/exports rules:
+- Always use ESM `import`/`export`.
+- `.js` suffix required in generated internal imports (TypeScript resolver translates to `.js` when compiling). Example: `import auth from './authentication.js'` from TS.
+- Avoid `require`/`module.exports`.
+
+Compilation:
+- Source code in `src/` and output in `dist/`.
+- Exclude `**/*.test.ts` from compilation as specified in [tsconfig.json](mdc:tsconfig.json).
+
+Strict settings:
+- `strict: true` enabled; prefer explicit typings in public APIs.
+- `noUncheckedIndexedAccess: true` for safer indexed access.
+
+Typing helpers (Zapier v17):
+- Prefer helpers from `zapier-platform-core` (`defineTrigger`, `defineCreate`, `defineSearch`, `defineInputFields`, `defineApp`).
+- They provide strict type inference with no runtime cost (identity functions).
