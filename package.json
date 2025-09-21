@@ -7,7 +7,11 @@
     "clean": "rimraf ./dist ./build",
     "build": "npm run clean && tsc",
     "dev": "npm run build -- --watch",
-    "_zapier-build": "npm run build"
+    "_zapier-build": "npm run build",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\""
   },
   "dependencies": {
     "zapier-platform-core": "17.7.2"
