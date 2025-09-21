@@ -1,0 +1,23 @@
+---
+globs: src/**/*.ts
+---
+# Repository Code Style
+
+- Descriptive naming: functions as verbs; variables as nouns.
+- Avoid cryptic abbreviations; prefer full words.
+- Use guard clauses and handle errors early.
+- Do not catch errors without handling them; when applicable, use `z.errors.Error`.
+- Keep imports organized and use ESM.
+- Respect TypeScript `strict` configuration; avoid `any` unless justified.
+- Use comments to explain the code when the code itself is not enough to explain its functionality.
+- Document interfaces and classes that are public or used across the project.
+- Document functions and methods that are public or used across the project.
+
+## URLs and configuration
+- Do not hardcode URLs or domains in the code. Centralize `baseURL` and routes in a configuration file (env/params).
+- Avoid interpolating tokens/secrets in logs or samples.
+- As a best practice, the service should not call endpoints; there must be a repository responsible for that, and the service should use the repository to obtain the data and execute the business logic.
+
+## Types organization
+- Keep one file per type/interface/class when the entity is public or used across the project.
+- Name type files with clear titles (e.g., `data-project.ts`, `paginated.ts`).

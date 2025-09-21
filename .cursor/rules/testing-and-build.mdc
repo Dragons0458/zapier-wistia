@@ -1,0 +1,37 @@
+---
+description: Rules for testing (Vitest) and build (tsc, zapier)
+globs: src/**/*.test.ts
+---
+# Tests and Build
+
+Tests:
+- Use Vitest: `import { describe, expect, it } from 'vitest'`.
+- To test auth and middlewares, create `appTester` with `zapier.createAppTester(App)`.
+- Always use mocks; avoid network calls since these are unit tests and should not have external dependencies.
+ - Stub `z.request` in tests to validate path, query, headers (`Authorization`), and body.
+
+Build:
+- Run `npm run build` to clean and compile to `dist/`.
+- `zapier test` runs build and tests in the Zapier CLI environment.
+ - Add scripts for Zapier CLI in `package.json`:
+   - `zapier:validate`: `zapier validate`
+   - `zapier:push`: `zapier push`
+
+Conventions:
+- Keep tests in `src/test/`.
+- Avoid circular dependencies between tests and source code.
+ - For each new `trigger`, `create`, or `search`, include corresponding unit tests.
+
+Trigger/Create tests:
+- Execute performs with `appTester`:
+```ts
+import zapier from 'zapier-platform-core';
+import App from '../index.js';
+const appTester = zapier.createAppTester(App);
+await appTester(App.triggers.myTrigger.operation.perform, bundle);
+// or for creates
+await appTester(App.creates.myCreate.operation.perform, bundle);
+```
+ - Minimum output contract:
+   - Triggers: each item must include `id` (string or number) and relevant fields.
+   - Creates/Searches: must return the object expected by the Zap (validate key shape).

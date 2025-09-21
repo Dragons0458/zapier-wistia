@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+# Project Structure Guide
+
+The main entry point of the Zapier integration is [src/index.ts](mdc:src/index.ts). This loads:
+- `authentication` from [src/authentication.ts](mdc:src/authentication.ts)
+- `befores`/`afters` from [src/middleware.ts](mdc:src/middleware.ts)
+
+Build output to `dist/` controlled by [tsconfig.json](mdc:tsconfig.json). The package exports `./dist/index.js` as specified in [package.json](mdc:package.json).
+
+Project conventions:
+- Source code in `src/` (TypeScript, ESM `type: module`).
+- Tests in `src/test/` using Vitest.
+- Do not include `*.test.ts` in the build (excluded in `tsconfig.json`).
+
+Relevant paths:
+- Triggers and creates are defined in `src/index.ts` under `triggers` and `creates`.
+- Middlewares must be registered in `beforeRequest` and `afterResponse` in `src/index.ts`.
+
+Suggested organization (optional):
+- Modularize `triggers/`, `creates/`, `searches/` into files under `src/` (e.g., `src/triggers/contact.ts`).
+- Centralize HTTP clients in `src/repositories/` (e.g., `src/repositories/wistia.ts`). The client must use a configuration file for the base URL.
+- Validation and data transformation logic must be done in the trigger or create itself, not in the repository.
+- Business logic must be in a service file (e.g., `src/services/wistia.ts`).
+- Re-export all modules in `src/index.ts` within `triggers` and `creates` for wiring. The service must use the repository to obtain the data and execute the business logic.
+ - Keep one file per public type/interface/class to improve reuse and clarity.
+ - Hardcoding endpoints/URLs in `triggers`/`creates` is prohibited; use a central client (e.g., `src/services/wistia.ts`) with a `baseURL` coming from a configuration file.

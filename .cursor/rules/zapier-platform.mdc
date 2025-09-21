@@ -1,0 +1,53 @@
+---
+description: Rules for developing features in Zapier Platform (core 17.x)
+globs: src/**/*.ts
+---
+# Zapier Integration Architecture
+
+- Define the app with `defineApp` in [src/index.ts](mdc:src/index.ts): `authentication`, `beforeRequest`, `afterResponse`, `triggers`, `creates`.
+- Basic authentication defined in [src/authentication.ts](mdc:src/authentication.ts). The `test` must call an accessible endpoint (e.g., `/me`).
+- Middlewares in [src/middleware.ts](mdc:src/middleware.ts):
+  - `beforeRequest`: modify `request` before it is sent.
+  - `afterResponse`: validate `response` and throw appropriate errors (use `z.errors.Error`).
+
+Best practices:
+- Reuse `z.request` and type parameters `(z: ZObject, bundle: Bundle)`.
+- Connect auth test data in `connectionLabel` (e.g., `{{json.username}}`).
+- Add new triggers/creates under `triggers`/`creates` in `index.ts` and export modules per file.
+ - Accompany each new `trigger`, `create`, or `search` with unit tests in `src/test/` using `appTester`.
+
+Common errors and how to avoid them:
+- Not registering middlewares in `index.ts` ⇒ they will not run.
+- Not using the `.js` suffix in relative imports ⇒ runtime ESM failures.
+- Catching errors without rethrowing/converting ⇒ use `z.errors.Error` and HTTP codes.
+
+## Definition helpers (v17)
+- Prefer helpers from `zapier-platform-core`: `defineTrigger`, `defineCreate`, `defineSearch`, `defineInputField`/`defineInputFields`, `defineApp`.
+- They are identity functions at runtime but improve type inference and validation in TypeScript.
+
+## Operations and performs (key types)
+- Creates (`BasicCreateOperation`):
+  - `perform?: Request | CreatePerform<Input>`
+  - `performGet?`, `performResume?` available when the flow requires it.
+- Searches (`BasicSearchOperation`):
+  - `perform: Request | SearchPerform<Input>`
+  - `performGet?`, `performResume?` optional.
+- Triggers:
+  - Polling: `type: 'polling'`, `perform: Request | PollingTriggerPerform<Input>`.
+  - Webhook: `type: 'hook'`, use `perform`, `performSubscribe`, `performUnsubscribe`, `performList`.
+  - Hook-to-poll: `type: 'hook_to_poll'`, use `performList`, `performSubscribe`, `performUnsubscribe`.
+- The `perform(z, bundle)` functions must return:
+  - Triggers: list of items with `id`.
+  - Creates/Searches: expected output object/data.
+  - Or a `Request` object for automatic execution by the platform.
+- For polling, return items in reverse chronological order and keep a consistent primary key to avoid dedupe issues.
+
+## Input types and samples
+- Define `inputFields` with `defineInputFields([...])` and use `InferInputData<typeof inputFields>` to type `bundle.inputData` in `perform`.
+- Provide representative `display` (`label`, `description`) and `sample` to improve UX and testing.
+- Define `outputFields` when applicable so the Zapier editor can map output fields predictably.
+
+## UX in Zapier Editor
+- Thoughtful inputFields. Use dynamic dropdowns only if trivial; otherwise, free-text `hashed_id` saves time. Provide helpText with examples.
+- Output fields. Return a clean, predictable shape so users can map downstream steps easily.
+- Copy clarity. Each trigger/action: short label, clear description, link to Wistia help/docs when useful.
