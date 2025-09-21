@@ -1,0 +1,35 @@
+---
+description: Guide to keep the README updated when relevant aspects change
+globs: package.json,src/index.ts,src/authentication.ts,src/middleware.ts,src/triggers/**/*.ts,src/creates/**/*.ts,src/searches/**/*.ts,tsconfig.json
+---
+# README Maintenance
+
+Update the README whenever you introduce changes that affect how the integration is used, built, or tested.
+
+## When should I update the README?
+- **npm scripts**: if commands change in [package.json](mdc:package.json) (for example `build`, `test`, `dev`, `clean`), reflect the new workflow and execution examples.
+- **Authentication**: if you modify the type, fields, `test`, or `connectionLabel` in [src/authentication.ts](mdc:src/authentication.ts), document the authentication method and the test endpoint.
+- **Triggers, Creates, and Searches**: when adding or changing operations in [src/index.ts](mdc:src/index.ts) or modules under `src/triggers/`, `src/creates/`, `src/searches/`, add/update the list of features with a brief description and output samples if applicable.
+  - Document supported filters (e.g., `project_id`), pagination options (`page`, `per_page` or cursor), and sorting (`sort_by`, `sort_direction`).
+- **Middlewares**: if you add/adjust `beforeRequest`/`afterResponse` in [src/middleware.ts](mdc:src/middleware.ts), explain what they do (e.g., handling 401/429 errors, common headers).
+- **Build and tests**: if build or test steps change (TypeScript, Vitest, Zapier CLI), update commands and notes (see also [tsconfig.json](mdc:tsconfig.json)).
+  - Include Zapier CLI scripts (`zapier:validate`, `zapier:push`) and how to configure secrets with `zapier env` if applicable.
+- **ESM/TypeScript**: if the ESM strategy changes (`.js` suffixes in imports, `type: module`), add a brief note to avoid common errors.
+
+## README update checklist
+- [ ] Updated the installation section with the current scripts from [package.json](mdc:package.json).
+- [ ] Documented the authentication method defined in [src/authentication.ts](mdc:src/authentication.ts) and indicated how it is validated (`test`).
+- [ ] Listed new `triggers`, `creates`, or `searches` registered in [src/index.ts](mdc:src/index.ts), with a brief description.
+- [ ] Explained relevant middlewares from [src/middleware.ts](mdc:src/middleware.ts) (e.g., errors and headers).
+- [ ] Verified that the build/test commands (TypeScript/Vitest/Zapier CLI) are updated and working.
+- [ ] Added ESM/TypeScript notes if there were changes that could affect contributors (`.js` suffixes in imports, `type: module`).
+
+## Suggested minimum sections in the README
+- **Installation and requirements**: Node, `npm install`.
+- **Scripts**: `npm run build`, `npm run test`, `npm run dev` (if it exists) and their purpose.
+- **Authentication**: type used and how it is validated.
+- **Features**: list of available triggers/creates/searches.
+  - Add output examples (based on `sample`) for each main operation.
+- **Build and tests**: recommended local workflow and with Zapier CLI (`zapier test`, `zapier push`).
+
+Tip: Keep command examples in code blocks and avoid including real secrets or tokens.
