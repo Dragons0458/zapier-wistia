@@ -26,7 +26,7 @@ export default [
     rules: {
       ...tseslint.configs.recommended.rules,
       ...tseslint.configs.recommendedTypeChecked.rules,
-      "prettier/prettier": "error",
+      "prettier/prettier": ["error", { endOfLine: "auto" }],
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },
@@ -49,7 +49,7 @@ export default [
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      "prettier/prettier": "error",
+      "prettier/prettier": ["error", { endOfLine: "auto" }],
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },

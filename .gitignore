@@ -64,3 +64,6 @@ typings/
 
 # zapier apprc file
 .zapierapprc
+
+# idea files
+.idea
