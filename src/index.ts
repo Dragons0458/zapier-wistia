@@ -4,6 +4,7 @@ import packageJson from '../package.json' with { type: 'json' };
 
 import authentication from './authentication.js';
 import { befores, afters } from './middleware.js';
+import createWistiaProject from './creates/wistia-create-project.js';
 
 export default defineApp({
   version: packageJson.version,
@@ -17,5 +18,7 @@ export default defineApp({
   triggers: {},
 
   // Add your creates here for them to show up!
-  creates: {},
+  creates: {
+    wistia_create_project: createWistiaProject,
+  },
 });

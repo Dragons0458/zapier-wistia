@@ -11,7 +11,9 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\""
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "zapier:validate": "zapier validate",
+    "zapier:push": "zapier push"
   },
   "dependencies": {
     "zapier-platform-core": "17.7.2"

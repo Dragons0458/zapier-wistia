@@ -43,7 +43,19 @@ Relevant files:
 - Internal imports require the `.js` suffix at runtime (resolved by TS on compile).
 - JSON import with attributes: `import packageJson from '../package.json' with { type: 'json' }` in `src/index.ts`.
 - Source code in `src/`; output in `dist/`.
-- `src/index.ts` registers `authentication`, `beforeRequest`, and `afterResponse`.
+- `src/index.ts` registers `authentication`, `beforeRequest`, `afterResponse`, and creates.
+
+### Creates
+
+- Create Project (Wistia)
+  - Path: `src/creates/wistia-create-project.ts`
+  - Description: Creates a new Wistia project using `POST /v1/projects.json`.
+  - Input fields:
+    - `name` (string, required) - Project name.
+  - Output sample:
+    ```json
+    { "id": 123, "hashed_id": "abc123", "name": "New Project" }
+    ```
 
 ### Tests
 - Framework: Vitest.
