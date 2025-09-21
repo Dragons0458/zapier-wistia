@@ -1,0 +1,39 @@
+---
+description: Guide to integrate the Wistia API (authentication, pagination, sorting)
+globs: src/**/*.ts
+---
+# Integration with Wistia
+
+Authentication:
+- Use an API token stored in Zapier credentials (`bundle.authData`).
+- Send it through the `Authorization` header (for example, `Bearer <token>`).
+- Never hardcode or log tokens.
+
+Base URL:
+- Define a configurable constant `WISTIA_BASE_URL` that comes from a configuration file. Check Wistia's official documentation for the current version/base and available endpoints before implementing.
+
+Pagination:
+- Expose `page` and `per_page` as `inputFields` when the endpoint supports it and propagate them in the query.
+- If the endpoint provides cursor-based pagination (`next`, `cursor`), prefer it over `page/per_page` for stability.
+
+Sorting:
+- If the endpoint supports sorting, use fields like `sort_by` and `sort_direction` (`asc` | `desc`) and validate values with whitelists.
+- Suggested default order: `sort_by=created`, `sort_direction=desc` for video lists.
+- Wistia list endpoints are paged—loop until empty or up to a reasonable cap. Keep page size default to ship fast.
+
+Recommended filters:
+- "New video" trigger: expose `project_id` as an `inputField` and propagate it in the query to limit by project.
+
+Rate limits:
+- Handle `429 Too Many Requests` responses and respect `Retry-After` if present. Implement retries with exponential backoff.
+
+Client and errors:
+- Centralize requests in `src/repositories/wistia.ts` using `z.request` and common middlewares. The client must use a configuration file for the base URL.
+- For `401/403`, throw `z.errors.Error('Unauthorized', 'AuthenticationError', status)`. For other 4xx/5xx, include `response.content` context.
+ - When converting 4xx/5xx errors, include Wistia's message (`message`/`error`) and `status` in the `z.errors.Error`.
+
+Security:
+- Use environment variables/Zapier credentials for tokens. Do not serialize or show them in `connectionLabel`.
+
+## Types organization
+- Everything coming from the Wistia API must have a type created in `src/types/wistia/{type-name}.ts`.
