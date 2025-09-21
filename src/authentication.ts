@@ -1,32 +1,42 @@
-import type { ZObject, Bundle, Authentication } from 'zapier-platform-core';
+import type { ZObject, Authentication } from 'zapier-platform-core';
+import { WISTIA_BASE_URL } from './config/wistia.js';
 
-// You want to make a request to an endpoint that is either specifically designed
-// to test auth, or one that every user will have access to. eg: `/me`.
-// By returning the entire request object, you have access to the request and
-// response data for testing purposes. Your connection label can access any data
-// from the returned response using the `json.` prefix. eg: `{{json.username}}`.
-const test = (z: ZObject, bundle: Bundle) =>
-  z.request({ url: 'https://auth-json-server.zapier-staging.com/me' });
+/**
+ * Make a request to an endpoint that is accessible to any authenticated user.
+ * Returning the request object allows access to request/response for tests and
+ * the connection label via `json.` prefix, e.g. `{{json.name}}`.
+ */
+const test = (z: ZObject) =>
+  z.request({ url: `${WISTIA_BASE_URL}/v1/account.json` });
 
 export default {
-  // "basic" auth automatically creates "username" and "password" input fields. It
-  // also registers default middleware to create the authentication header.
-  type: 'basic',
+  /**
+   * Custom auth to accept a single `api_key` for Wistia. The header is injected
+   * via a global `beforeRequest` middleware.
+   */
+  type: 'custom',
 
-  // Define any input app's auth requires here. The user will be prompted to enter
-  // this info when they connect their account.
-  fields: [],
+  /**
+   * Prompt user for the Wistia API key.
+   */
+  fields: [
+    {
+      key: 'api_key',
+      label: 'API Key',
+      required: true,
+      type: 'string',
+      helpText:
+        'Wistia API token. It will be sent as Authorization: Bearer <api_key>.',
+    },
+  ],
 
-  // The test method allows Zapier to verify that the credentials a user provides
-  // are valid. We'll execute this method whenever a user connects their account for
-  // the first time.
+  /**
+   * Verify the provided API key by calling the Wistia account endpoint.
+   */
   test,
 
-  // This template string can access all the data returned from the auth test. If
-  // you return the test object, you'll access the returned data with a label like
-  // `{{json.X}}`. If you return `response.data` from your test, then your label can
-  // be `{{X}}`. This can also be a function that returns a label. That function has
-  // the standard args `(z: ZObject, bundle: Bundle)` and data returned from the
-  // test can be accessed in `bundle.inputData.X`.
-  connectionLabel: '{{json.username}}',
+  /**
+   * Use account name if available. Avoid showing tokens or secrets here.
+   */
+  connectionLabel: '{{json.name}}',
 } satisfies Authentication;

@@ -12,6 +12,8 @@ globs: src/**/*.ts
 - Use comments to explain the code when the code itself is not enough to explain its functionality.
 - Document interfaces and classes that are public or used across the project.
 - Document functions and methods that are public or used across the project.
+- Comments should use JSDoc syntax.
+- When you finish a task, run `npm run lint:fix` to fix the code style and `npm run format:check` to check the code style.
 
 ## URLs and configuration
 - Do not hardcode URLs or domains in the code. Centralize `baseURL` and routes in a configuration file (env/params).
