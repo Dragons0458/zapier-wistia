@@ -45,6 +45,17 @@ Relevant files:
 - Source code in `src/`; output in `dist/`.
 - `src/index.ts` registers `authentication`, `beforeRequest`, `afterResponse`, and creates.
 
+### Triggers
+
+- New Media (Wistia)
+  - Path: `src/triggers/wistia-new-media.ts`
+  - Description: Polls `GET /v1/medias.json` every 5 minutes (Zapier schedule) to detect new media items. Always returns newest first by created date.
+  - Input fields: none
+  - Output sample:
+    ```json
+    { "id": 1001, "hashed_id": "abc123def", "name": "Sample Media", "type": "Video" }
+    ```
+
 ### Creates
 
 - Create Project (Wistia)
