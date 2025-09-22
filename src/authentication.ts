@@ -26,7 +26,7 @@ export default {
       required: true,
       type: 'string',
       helpText:
-        'Wistia API token. It will be sent as Authorization: Bearer <api_key>.',
+        'Wistia API token. It will be sent as Authorization: Bearer <api_key>. You can find your API token in your [Wistia account settings](https://wistia.com/settings/api).',
     },
   ],
 
