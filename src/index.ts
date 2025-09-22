@@ -5,6 +5,7 @@ import packageJson from '../package.json' with { type: 'json' };
 import authentication from './authentication.js';
 import { befores, afters } from './middleware.js';
 import createWistiaProject from './creates/wistia-create-project.js';
+import triggerWistiaNewMedia from './triggers/wistia-new-media.js';
 
 export default defineApp({
   version: packageJson.version,
@@ -15,7 +16,9 @@ export default defineApp({
   afterResponse: [...afters],
 
   // Add your triggers here for them to show up!
-  triggers: {},
+  triggers: {
+    wistia_new_media: triggerWistiaNewMedia,
+  },
 
   // Add your creates here for them to show up!
   creates: {
