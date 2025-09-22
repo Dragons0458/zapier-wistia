@@ -14,6 +14,7 @@ globs: src/**/*.ts
 - Document functions and methods that are public or used across the project.
 - Comments should use JSDoc syntax.
 - When you finish a task, run `npm run lint:fix` to fix the code style and `npm run format:check` to check the code style.
+- If there are parameters that are an object and have multiple properties, avoid declaring the type in the object parameter itself and instead create a type that represents the object.
 
 ## URLs and configuration
 - Do not hardcode URLs or domains in the code. Centralize `baseURL` and routes in a configuration file (env/params).
